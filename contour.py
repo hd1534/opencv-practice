@@ -12,25 +12,34 @@ class NumpyEncoder(json.JSONEncoder):
         return super.default(self, obj)
 
 
-if __name__ == '__main__':
-    img_color = cv.imread('images/contour-test.png')
+def readContour(imgPath: str) -> None:
+    img_color = cv.imread(imgPath)
     img_gray = cv.cvtColor(img_color, cv.COLOR_BGR2GRAY)
     ret, img_binary = cv.threshold(img_gray, 127, 255, 0)
     contours, hierarchy = cv.findContours(
         img_binary, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
 
     for cnt in contours:
-        lineColor = (randint(0, 255), randint(0, 255), randint(0, 255))
+        lineColor = (randint(10, 255), randint(10, 255), randint(10, 255))
         cv.drawContours(img_color, [cnt], 0, lineColor, 3)
 
-    for cnt in contours:
-        print(type(cnt))
-        print(cnt.ndim)
-        print(cnt.shape)
-        print("\n------------------------------------------------\n")
+    # for cnt in contours:
+    #     print(type(cnt))
+    #     print(cnt.ndim)
+    #     print(cnt.shape)
+    #     print("\n------------------------------------------------\n")
 
     cv.imshow("result", img_color)
+
+    print("\n------------------------------------------------\n")
 
     k = cv.waitKey(0)
 
     print(json.dumps(contours, cls=NumpyEncoder))
+
+
+if __name__ == '__main__':
+    readContour('images/contour-test.png')
+
+    # for i in range(10):
+    #     readContour(f'images/{i}.png')
